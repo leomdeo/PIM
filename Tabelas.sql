@@ -14,7 +14,6 @@ USE TSBSEGUROS
 		Apolice
 
 	Tabelas de Relacionamento:
-		Cliente_Automovel
 		Plano_Assistencia
 		Plano_Cobertura
 */
@@ -47,11 +46,6 @@ CREATE TABLE CLIENTE (
 	Data_Criacao DATETIME,
 	TipoCliente VARCHAR(20) NOT NULL, CHECK (TipoCliente IN('PJ', 'PF'))
 );
-
-SELECT * FROM CLIENTE 
-
-INSERT INTO CLIENTE (Email, Senha, Nome, Razao_Social, CNPJ, CPF,CNH, Data_Nascimento, Data_Criacao, TipoCliente)
-VALUES(null, null, 'Nicolas', null,null,'4263367800','21232524262728',2000-11-17, NULL, 'PF')
 
 CREATE TABLE AUTOMOVEL (
     Id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
