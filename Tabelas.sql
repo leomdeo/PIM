@@ -1,5 +1,7 @@
 USE TSBSEGUROS
 
+USE TSBSEGUROS
+
 /*
 	Tabelas:
 		Funcionario
