@@ -19,46 +19,10 @@
 */
 /* -- GETS ALL  --- */
 
-CREATE PROCEDURE GetPjClients 
+CREATE PROCEDURE GetAllClients 
 AS
-SELECT cliente.id, 
-cliente.razaoSocial,
-cliente.cnpj,
-cliente.email,
-cliente.senha,
-cliente.isAtivo,
-cliente.tipoCliente,
-cliente.telefone,
-cliente.dataCriacao  
-FROM CLIENTES_PJ cliente
+SELECT * FROM CLIENTES 
 GO;
-CREATE PROCEDURE GetPfClients
-AS
-SELECT cliente.id, 
-cliente.nome,
-cliente.cpf,
-cliente.cnh,
-cliente.email,
-cliente.senha,
-cliente.isAtivo,
-cliente.tipoCliente,
-cliente.telefone,
-cliente.dataNascimento 
-FROM CLIENTES_PF cliente
-GO;
-
-/* -- GETS BY ID  --- */
-CREATE PROCEDURE GetPjClientById 
-@IdClientePj INT
-AS
-SELECT * FROM CLIENTES_PJ cliente WHERE cliente.Id = @IdClientePj 
-GO;
-CREATE PROCEDURE GetPfClientById 
-@IdClientePf INT
-AS
-SELECT * FROM CLIENTES_PF cliente WHERE cliente.Id = @IdClientePf
-GO;
-
 /* -- POSTS --- */
 CREATE PROCEDURE PostClientPf 
 @NOME VARCHAR(50),
@@ -68,7 +32,7 @@ CREATE PROCEDURE PostClientPf
 @DATANASCIMENTO VARCHAR(10)
 AS 
 SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
-INSERT INTO CLIENTES_PF (nome, email, senha, dataNascimento, cpf, cnh, telefone ,tipoCliente, isAtivo)
+INSERT INTO CLIENTES (nome, email, senha, dataNascimento, cpf, cnh, telefone ,tipoCliente, isAtivo)
 VALUES(@NOME, NULL, NULL, @DATANASCIMENTO, @CPF, @CNH, @TELEFONE, 0, 'TRUE')
 GO;
 CREATE PROCEDURE PostClientPj 
@@ -78,86 +42,55 @@ CREATE PROCEDURE PostClientPj
 @DATACRIACAO VARCHAR(10)
 AS 
 SELECT PARSE(@DATACRIACAO as date USING 'AR-LB')
-INSERT INTO CLIENTES_PJ(razaoSocial, email, senha, dataCriacao, cnpj, telefone, tipoCliente, isAtivo)
+INSERT INTO CLIENTES(razaoSocial, email, senha, dataCriacao, cnpj, telefone, tipoCliente, isAtivo)
 VALUES(@RAZAOSOCIAL, NULL, NULL, @DATACRIACAO, @CNPJ, @TELEFONE, 1, 'TRUE') 
 GO;
-
 /* -- PUTS  --- */
-CREATE PROCEDURE PutClientPf
+CREATE PROCEDURE PutClient
 @EMAIL VARCHAR(50),
 @SENHA VARCHAR(50),
 @TELEFONE VARCHAR(20),
 @ID INT
 AS
-UPDATE CLIENTES_PF
-SET CLIENTES_PF.email = @EMAIL, CLIENTES_PF.senha = @SENHA, CLIENTES_PF.telefone = @TELEFONE
-WHERE CLIENTES_PF.id = @ID
-GO;
-CREATE PROCEDURE PutClientPj 
-@EMAIL VARCHAR(50),
-@SENHA VARCHAR(50),
-@TELEFONE VARCHAR(20),
-@ID INT
-AS
-UPDATE CLIENTES_PJ
-SET CLIENTES_PJ.email = @EMAIL, CLIENTES_PJ.senha = @SENHA, CLIENTES_PJ.telefone = @TELEFONE
-WHERE CLIENTES_PJ.id = @ID
+UPDATE CLIENTES
+SET CLIENTES.email = @EMAIL, CLIENTES.senha = @SENHA, CLIENTES.telefone = @TELEFONE
+WHERE CLIENTES.id = @ID
 GO;
 CREATE PROCEDURE PutLoginClientPf
 @EMAIL VARCHAR(50),
 @SENHA VARCHAR(50),
 @CPF VARCHAR(50)
 AS
-UPDATE CLIENTES_PF
-SET CLIENTES_PF.email = @EMAIL, CLIENTES_PF.senha = @SENHA
-WHERE CLIENTES_PF.cpf = @CPF
+UPDATE CLIENTES
+SET CLIENTES.email = @EMAIL, CLIENTES.senha = @SENHA
+WHERE CLIENTES.cpf = @CPF
 GO;
 CREATE PROCEDURE PutLoginClientPJ
 @EMAIL VARCHAR(50),
 @SENHA VARCHAR(50),
 @CNPJ VARCHAR(50)
 AS
-UPDATE CLIENTES_PJ 
-SET CLIENTES_PJ.email = @EMAIL, CLIENTES_PJ.senha = @SENHA
-WHERE CLIENTES_PJ.cnpj = @CNPJ
+UPDATE CLIENTES 
+SET CLIENTES.email = @EMAIL, CLIENTES.senha = @SENHA
+WHERE CLIENTES.cnpj = @CNPJ
 GO;
-
-
-CREATE PROCEDURE ChangeStatusPjClientById 
-@idClientePj INT,
+CREATE PROCEDURE ChangeStatusClientById 
+@ID INT,
 @STATUS BIT 
 AS 
-UPDATE CLIENTES_PJ 
-SET CLIENTES_PJ.isAtivo = @STATUS
-WHERE CLIENTES_PJ.id = @idClientePj 
+UPDATE CLIENTES
+SET CLIENTES.isAtivo = @STATUS
+WHERE CLIENTES.id = @ID 
 GO;
-CREATE PROCEDURE ChangeStatusPfClientById 
-@idClientePf INT,
-@STATUS BIT 
-AS 
-UPDATE CLIENTES_PF
-SET CLIENTES_PF.isAtivo = @STATUS
-WHERE CLIENTES_PF.id = @idClientePf
-GO;
-
-
-CREATE PROCEDURE DeletePfClient 
+CREATE PROCEDURE DeleteClient 
 @ID INT
 AS
-DELETE FROM CLIENTES_PF 
-WHERE CLIENTES_PF.id = @ID
-GO;
-CREATE PROCEDURE DeletePjClient 
-@ID INT
-AS
-DELETE FROM CLIENTES_PJ 
-WHERE CLIENTES_PJ.id = @ID
+DELETE FROM CLIENTES 
+WHERE CLIENTES.id = @ID
 GO;
 
 
-
-EXEC GetPjClients;
-EXEC GetPfClients;
+EXEC GetAllClients;
 
 EXEC PostClientPf @NOME = 'Leozin Bananeiro', @DATANASCIMENTO = '26/11/1996', @CPF = '12345678911', @CNH = '98765432100', @TELEFONE ='11988323723';
 EXEC PostClientPj @RAZAOSOCIAL = 'Construtora ENG', @DATACRIACAO = '27/12/1988', @CNPJ = '98765432100', @TELEFONE ='40028922';
@@ -165,11 +98,8 @@ EXEC PostClientPj @RAZAOSOCIAL = 'Construtora ENG', @DATACRIACAO = '27/12/1988',
 EXEC PutLoginClientPf @EMAIL = 'mudouPF@gmail.com', @SENHA = '52485', @CPF ='12345678911' ;
 EXEC PutLoginClientPJ @EMAIL= 'mudouPJ@gmail.com', @SENHA = '55948542', @CNPJ = '98765432100';
 
-EXEC PutClientPf @EMAIL ='exemploCPF@gmail.com', @SENHA ='123456', @TELEFONE = '119999999', @ID = 1;
-EXEC PutClientPj @EMAIL ='exemploCPNJ@gmail.com', @SENHA = '654321', @TELEFONE = '119999999', @ID = 2;
+EXEC PutClient @EMAIL ='exemploCPF@gmail.com', @SENHA ='123456', @TELEFONE = '119999999', @ID = 1;
 
-EXEC ChangeStatusPfClientById @idClientePf = 1, @STATUS = 'FALSE';
-EXEC ChangeStatusPJClientById @idClientePJ = 2, @STATUS = 'FALSE';
+EXEC ChangeStatusClientById @ID = 1, @STATUS = 'FALSE';
 
-EXEC DeletePjClient @ID = 2;
-EXEC DeletePfClient @ID = 1;
+EXEC DeleteClient @ID = 2;
