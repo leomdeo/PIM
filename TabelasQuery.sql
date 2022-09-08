@@ -1,0 +1,119 @@
+/*
+	Tabelas:
+		Funcionario
+		ClientepJ
+		ClientepF
+		Automovel
+		Seguradora
+		Cobertura
+		Assistencia
+		Plano
+		Apolice
+
+*/
+
+/* --- TABELAS PRINCIPAIS --- */
+CREATE TABLE FUNCIONARIOS(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	nome VARCHAR(50) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	senha VARCHAR(12) NOT NULL,
+	dataNascimento varchar(10) NOT NULL,
+	cpf VARCHAR(11) NOT NULL,
+	rg VARCHAR(11) NOT NULL,
+	ctps VARCHAR(11) NOT NULL,
+	telefone VARCHAR(11) NOT NULL,
+	cargo VARCHAR(50) NULL,
+	setor INT NOT NULL, CHECK (setor IN(0,1,2,3)),
+	isAtivo BIT NOT NULL,
+);
+
+/* SETORES: 'RECURSOS_HUMANOS', 'VENDAS', 'INFORMATICA', 'COMERCIAL'*/
+
+CREATE TABLE CLIENTES(
+    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	email VARCHAR(50),
+	senha VARCHAR(12),
+    nome VARCHAR(50),
+	cpf VARCHAR(11),
+	cnh VARCHAR(11),
+	dataNascimento VARCHAR(10),
+	razaoSocial VARCHAR(50),
+	cnpj VARCHAR(14),
+	dataCriacao VARCHAR(10),
+	telefone VARCHAR(12),
+	tipoCliente INT NOT NULL, CHECK (tipoCliente IN(0,1)),
+	isAtivo BIT NOT NULL,
+);
+
+CREATE TABLE AUTOMOVEIS (
+    id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	idCliente INT,
+    modelo VARCHAR(50)NOT NULL,
+	marca VARCHAR(50)NOT NULL,
+	anoModelo VARCHAR(4) NOT NULL,
+	cor VARCHAR(50)NOT NULL,
+	renavam VARCHAR(50)NOT NULL,
+	numeroMotor VARCHAR(50)NOT NULL,
+	placa VARCHAR(7) NOT NULL,
+	crlv VARCHAR(50)NOT NULL,
+	FOREIGN KEY (idCliente) REFERENCES CLIENTES(id) ON DELETE CASCADE,
+);
+
+CREATE TABLE SEGURADORAS(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	razaoSocial VARCHAR(50) NOT NULL,
+	cnpj VARCHAR(50) NOT NULL,
+	contratoSocial VARCHAR(50) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	telefone VARCHAR(11) NOT NULL,
+);
+
+CREATE TABLE PLANOS(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	nomePlano VARCHAR(50),
+	idSeguradora INT NOT NULL,
+	tipoPlano INT NOT NULL, CHECK (TipoPlano IN(0,1,2)),
+	FOREIGN KEY (idSeguradora) REFERENCES SEGURADORAS(id) ON DELETE CASCADE,
+);
+/*TIPOS PLANO: 'PADRAO', 'PREMIUM', 'SUPER'*/
+
+
+CREATE TABLE ASSISTENCIAS(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	idPlano INT NOT NULL,
+	descricao VARCHAR(50) NOT NULL,
+	contato VARCHAR(50) NOT NULL,
+	FOREIGN KEY (idPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
+);
+
+CREATE TABLE COBERTURAS(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	idPlano INT NOT NULL,
+	descricao VARCHAR(50) NOT NULL,
+	indenizacao DECIMAL NOT NULL,
+	FOREIGN KEY (idPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
+);
+
+CREATE TABLE APOLICES(
+	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	idCliente INT,
+	idPlano INT,
+	idFuncionario INT,
+	formaPagamento INT NOT NULL, CHECK (FormaPagamento IN(0,1,2)),
+	valorSeguro DECIMAL NOT NULL,
+	dataCriacaoApolice DATETIME NOT NULL,
+	tempoContratacaoPorMes INT NOT NULL,
+	FOREIGN KEY (idCliente) REFERENCES CLIENTES(id) ON DELETE CASCADE,
+	FOREIGN KEY (IdPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
+	FOREIGN KEY (IdFuncionario) REFERENCES FUNCIONARIOS(id) ON DELETE CASCADE
+);
+
+/*FORMA DE PAGAMENTO: 'CARTAO_CREDITO', 'PIX', 'BOLETO'*/
+
+SELECT cliente.Id,cliente.Nome,automovel.Id,automovel.Modelo, automovel.Marca, automovel.Ano_Modelo FROM AUTOMOVEL automovel
+JOIN CLIENTE cliente
+ON cliente.Id = automovel.Id_Cliente
+WHERE cliente.Id = 1
+
+SELECT * FROM CLIENTES
