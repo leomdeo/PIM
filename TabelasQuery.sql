@@ -1,5 +1,3 @@
-USE TSBSEGUROS
-
 CREATE TABLE FUNCIONARIOS(
 	fun_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	fun_email VARCHAR(50) NOT NULL,
@@ -12,7 +10,8 @@ CREATE TABLE FUNCIONARIOS(
 	fun_telefone VARCHAR(11) NOT NULL,
 	fun_cep VARCHAR(8) NOT NULL,
 	fun_logradouro VARCHAR(50) NOT NULL,
-	fun_cargo VARCHAR(50) NULL,
+	fun_cargo VARCHAR(50) NOT NULL,
+	fun_salario DECIMAL NOT NULL,
 	fun_sexo INT NOT NULL, CHECK (fun_sexo IN(0,1)),
 	fun_estadoCivil BIT NOT NULL, CHECK (fun_estadoCivil IN(0,1,2,3)),
 	fun_status BIT NOT NULL, CHECK (fun_status IN(0,1,2)),
@@ -91,7 +90,7 @@ CREATE TABLE COBERTURAS(
 	cober_plan_id INT NOT NULL,
 	cober_descricao VARCHAR(200) NOT NULL,
 	cober_indenizacao DECIMAL NOT NULL,
-	FOREIGN KEY (cober_plan_id ) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
+	FOREIGN KEY (cober_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
 );
 
 CREATE TABLE APOLICES(
