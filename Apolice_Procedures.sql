@@ -1,17 +1,3 @@
-/*
-PROCEDURES DAS APOLICES
-*/
-/*
-	id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	idCliente INT,
-	idPlano INT,
-	idFuncionario INT,
-	formaPagamento INT NOT NULL, CHECK (FormaPagamento IN(0,1,2)),
-	valorSeguro DECIMAL NOT NULL,
-	dataCriacaoApolice DATETIME NOT NULL,
-	tempoContratacaoPorMes INT NOT NULL,
-*/
-
 CREATE PROCEDURE GetAllApolices
 AS
 SELECT * FROM APOLICES
@@ -26,7 +12,9 @@ CREATE PROCEDURE PostApolice
 @DATACRIACAOAPOLICE DATETIME,
 @TEMPOCONTRATACAOPORMES INT
 AS
-INSERT INTO APOLICES(idCliente, idPlano, idFuncionario,formaPagamento,valorSeguro,dataCriacaoApolice,tempoContratacaoPorMes )
+INSERT INTO APOLICES(
+apol_cli_id, apol_plan_id, apol_fun_id ,apol_formaPagamento,
+apol_valorSeguro,apol_dataCriacaoApolice,apol_tempoContratacaoPorMes)
 VALUES(@IDPLANO, @IDPLANO, @IDFUNCIONARIO, @FORMAPAGAMENTO, @VALORSEGURO, @DATACRIACAOAPOLICE, @TEMPOCONTRATACAOPORMES)
 GO;
 
@@ -37,8 +25,10 @@ CREATE PROCEDURE PutApolice
 @TEMPOCONTRATACAOPORMES INT
 AS
 UPDATE APOLICES 
-SET APOLICES.formaPagamento = @FORMAPAGAMENTO, APOLICES.valorSeguro = @VALORSEGURO, APOLICES.tempoContratacaoPorMes = @TEMPOCONTRATACAOPORMES
-WHERE APOLICES.id = @ID
+SET APOLICES.apol_formaPagamento = @FORMAPAGAMENTO, 
+APOLICES.apol_valorSeguro = @VALORSEGURO, 
+APOLICES.apol_tempoContratacaoPorMes = @TEMPOCONTRATACAOPORMES
+WHERE APOLICES.apol_id = @ID
 GO;
 
 CREATE PROCEDURE DeleteApolice
