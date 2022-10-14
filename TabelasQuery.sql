@@ -1,114 +1,109 @@
-/*
-	Tabelas:
-		Funcionario
-		ClientepJ
-		ClientepF
-		Automovel
-		Seguradora
-		Cobertura
-		Assistencia
-		Plano
-		Apolice
-
-*/
-
-/* --- TABELAS PRINCIPAIS --- */
-
+USE TSBSEGUROS
 
 CREATE TABLE FUNCIONARIOS(
-	funcionario_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	nome VARCHAR(50) NOT NULL,
-	email VARCHAR(50) NOT NULL,
-	senha VARCHAR(11) NOT NULL,
-	dataNascimento varchar(10) NOT NULL,
-	dataAdmissao varchar(10) NOT NULL,
-	sexo INT NOT NULL, CHECK (sexo IN(0,1)),
-	cpf VARCHAR(11) NOT NULL,
-	rg VARCHAR(11) NOT NULL,
-	telefone VARCHAR(11) NOT NULL,
-	cep VARCHAR(8) NOT NULL,
-	cargo VARCHAR(50) NULL,
-	isAtivo BIT NOT NULL,
+	fun_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	fun_email VARCHAR(50) NOT NULL,
+	fun_nome VARCHAR(50) NOT NULL,
+	fun_senha VARCHAR(11) NOT NULL,
+	fun_dataNascimento varchar(10) NOT NULL,
+	fun_dataAdmissao varchar(10) NOT NULL,
+	fun_cpf VARCHAR(11) NOT NULL,
+	fun_rg VARCHAR(11) NOT NULL,
+	fun_telefone VARCHAR(11) NOT NULL,
+	fun_cep VARCHAR(8) NOT NULL,
+	fun_logradouro VARCHAR(50) NOT NULL,
+	fun_cargo VARCHAR(50) NULL,
+	fun_sexo INT NOT NULL, CHECK (fun_sexo IN(0,1)),
+	fun_estadoCivil BIT NOT NULL, CHECK (fun_estadoCivil IN(0,1,2,3)),
+	fun_status BIT NOT NULL, CHECK (fun_status IN(0,1,2)),
 );
 
 CREATE TABLE CLIENTES(
-    cliente_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	email VARCHAR(50),
-	senha VARCHAR(12),
-    nome VARCHAR(50),
-	cpf VARCHAR(11),
-	cnh VARCHAR(11),
-	dataNascimento VARCHAR(10),
-	razaoSocial VARCHAR(50),
-	cnpj VARCHAR(14),
-	dataCriacao VARCHAR(10),
-	telefone VARCHAR(12),
-	tipoCliente INT NOT NULL, CHECK (tipoCliente IN(0,1)),
-	isAtivo BIT NOT NULL,
+    cli_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	cli_email VARCHAR(50),
+	cli_senha VARCHAR(18),
+	cli_cep VARCHAR(8) NOT NULL,
+	cli_logradouro VARCHAR(50) NOT NULL,
+	cli_telefone VARCHAR(12),
+    cli_nome VARCHAR(50),
+	cli_cpf VARCHAR(11),
+	cli_cnh VARCHAR(11),
+	cli_rg VARCHAR(11) NOT NULL,
+	cli_dataNascimento VARCHAR(10),
+	cli_estadoCivil BIT NOT NULL, CHECK (cli_estadoCivil IN(0,1,2,3)),
+	cli_sexo INT NOT NULL, CHECK (cli_sexo IN(0,1)),
+	cli_razaoSocial VARCHAR(50),
+	cli_contratoSocial VARCHAR(50),
+	cli_cnpj VARCHAR(14),
+	cli_dataCriacao VARCHAR(10),
+	cli_tipoCliente INT NOT NULL, CHECK (cli_tipoCliente IN(0,1)),
+	cli_status BIT NOT NULL, CHECK (cli_status IN(0,1,2)),
 );
 
 CREATE TABLE AUTOMOVEIS (
-    automovel_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	idCliente INT,
-    modelo VARCHAR(50)NOT NULL,
-	marca VARCHAR(50)NOT NULL,
-	anoModelo VARCHAR(4) NOT NULL,
-	cor VARCHAR(50)NOT NULL,
-	renavam VARCHAR(50)NOT NULL,
-	numeroMotor VARCHAR(50)NOT NULL,
-	placa VARCHAR(7) NOT NULL,
-	crlv VARCHAR(50)NOT NULL,
-	FOREIGN KEY (idCliente) REFERENCES CLIENTES(id) ON DELETE CASCADE,
+    auto_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	auto_cli_id INT,
+    auto_modelo VARCHAR(50)NOT NULL,
+	auto_marca VARCHAR(50)NOT NULL,
+	auto_anoModelo VARCHAR(4) NOT NULL,
+	auto_cor VARCHAR(50)NOT NULL,
+	auto_renavam VARCHAR(50)NOT NULL,
+	auto_numeroMotor VARCHAR(50)NOT NULL,
+	auto_placa VARCHAR(7) NOT NULL,
+	auto_crlv VARCHAR(50)NOT NULL,
+	auto_status BIT NOT NULL, CHECK (auto_status IN(0,1,2)),
+	FOREIGN KEY (auto_cli_id) REFERENCES CLIENTES(cli_id) ON DELETE CASCADE,
 );
 
 CREATE TABLE SEGURADORAS(
-	seguradora_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	razaoSocial VARCHAR(50) NOT NULL,
-	cnpj VARCHAR(50) NOT NULL,
-	contratoSocial VARCHAR(50) NOT NULL,
-	email VARCHAR(50) NOT NULL,
-	telefone VARCHAR(11) NOT NULL,
+	segu_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	segu_razaoSocial VARCHAR(50) NOT NULL,
+	segu_cnpj VARCHAR(50) NOT NULL,
+	segu_contratoSocial VARCHAR(50) NOT NULL,
+	segu_email VARCHAR(50) NOT NULL,
+	segu_telefone VARCHAR(11) NOT NULL,
+	segu_cep VARCHAR(8) NOT NULL,
+	segu_logradouro VARCHAR(50) NOT NULL,
+	segu_status BIT NOT NULL, CHECK (segu_status IN(0,1,2)),
 );
 
 CREATE TABLE PLANOS(
-	plano_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	nomePlano VARCHAR(50),
-	idSeguradora INT NOT NULL,
-	tipoPlano INT NOT NULL, CHECK (TipoPlano IN(0,1,2)),
-	FOREIGN KEY (idSeguradora) REFERENCES SEGURADORAS(id) ON DELETE CASCADE,
+	plan_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	plan_nomePlano VARCHAR(50),
+	plan_segu_id INT NOT NULL,
+	plan_tipoPlano INT NOT NULL, CHECK (plan_tipoPlano IN(0,1,2)),
+	plan_status BIT NOT NULL, CHECK (plan_status IN(0,1,2)),
+	FOREIGN KEY (plan_segu_id) REFERENCES SEGURADORAS(segu_id) ON DELETE CASCADE,
 );
-/*TIPOS PLANO: 'PADRAO', 'PREMIUM', 'SUPER'*/
-
 
 CREATE TABLE ASSISTENCIAS(
-	assistencia_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	idPlano INT NOT NULL,
-	descricao VARCHAR(50) NOT NULL,
-	contato VARCHAR(50) NOT NULL,
-	FOREIGN KEY (idPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
+	assist_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	assist_plan_id INT NOT NULL,
+	assist_nome VARCHAR(50) NOT NULL,
+	assist_empresaSuporte VARCHAR(50) NOT NULL,
+	assist_descricao VARCHAR(200) NOT NULL,
+	assist_contato VARCHAR(50) NOT NULL,
+	FOREIGN KEY (assist_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
 );
 
 CREATE TABLE COBERTURAS(
-	cobertura_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	idPlano INT NOT NULL,
-	descricao VARCHAR(50) NOT NULL,
-	indenizacao DECIMAL NOT NULL,
-	FOREIGN KEY (idPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
+	cober_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	cober_plan_id INT NOT NULL,
+	cober_descricao VARCHAR(200) NOT NULL,
+	cober_indenizacao DECIMAL NOT NULL,
+	FOREIGN KEY (cober_plan_id ) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
 );
 
 CREATE TABLE APOLICES(
-	apolice_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	idCliente INT,
-	idPlano INT,
-	idFuncionario INT,
-	formaPagamento INT NOT NULL, CHECK (FormaPagamento IN(0,1,2)),
-	valorSeguro DECIMAL NOT NULL,
-	dataCriacaoApolice DATETIME NOT NULL,
-	tempoContratacaoPorMes INT NOT NULL,
-	FOREIGN KEY (idCliente) REFERENCES CLIENTES(id) ON DELETE CASCADE,
-	FOREIGN KEY (IdPlano) REFERENCES PLANOS(id) ON DELETE CASCADE,
-	FOREIGN KEY (IdFuncionario) REFERENCES FUNCIONARIOS(id) ON DELETE CASCADE
+	apol_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	apol_cli_id INT,
+	apol_plan_id INT,
+	apol_fun_id INT,
+	apol_formaPagamento INT NOT NULL, CHECK (apol_formaPagamento IN(0,1,2)),
+	apol_valorSeguro DECIMAL NOT NULL,
+	apol_dataCriacaoApolice DATETIME NOT NULL,
+	apol_tempoContratacaoPorMes INT NOT NULL,
+	FOREIGN KEY (apol_cli_id) REFERENCES CLIENTES(cli_id) ON DELETE CASCADE,
+	FOREIGN KEY (apol_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
+	FOREIGN KEY (apol_fun_id) REFERENCES FUNCIONARIOS(fun_id) ON DELETE CASCADE
 );
-
-/*FORMA DE PAGAMENTO: 'CARTAO_CREDITO', 'PIX', 'BOLETO'*/
-
