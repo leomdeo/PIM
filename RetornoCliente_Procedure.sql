@@ -1,46 +1,18 @@
 CREATE PROCEDURE ReturnClientProperties
 @EMAIL VARCHAR(50),
-@SENHA VARCHAR(12)
+@SENHA VARCHAR(18)
 AS
-SELECT client.*, automovel.*, plano.*, coberturas.*,assistencia.*,apolice.*
+SELECT client.*, automovel.*, plano.*, coberturas.*,assistencia.*, apolice.*
 FROM CLIENTES client
-JOIN [dbo].[AUTOMOVEIS] automovel
-ON automovel.idCliente = client.id
-JOIN [dbo].[APOLICES] apolice
-ON client.id = apolice.idCliente
-JOIN [dbo].[PLANOS] plano
-ON plano.id = apolice.idPlano
-JOIN [dbo].[COBERTURAS] coberturas 
-ON coberturas.idPlano = plano.id 
-JOIN [dbo].[ASSISTENCIAS] assistencia 
-ON assistencia.idPlano = plano.id
-WHERE client.email = @EMAIL AND client.senha = @SENHA
+JOIN AUTOMOVEIS automovel
+ON automovel.auto_cli_id  = client.cli_id
+JOIN APOLICES apolice
+ON client.cli_id = apolice.apol_cli_id 
+JOIN PLANOS plano
+ON plano.plan_id = apolice.apol_plan_id 
+JOIN COBERTURAS coberturas 
+ON coberturas.cober_plan_id  = plano.plan_id 
+JOIN ASSISTENCIAS assistencia 
+ON assistencia.assist_plan_id  = plano.plan_id
+WHERE client.cli_email = @EMAIL AND client.cli_senha = @SENHA
 ;
-
-DROP PROCEDURE ReturnClientProperties
-
-EXEC ReturnClientProperties @EMAIL= 'mudouPF@gmail.com', @SENHA = '52485';
-
-
-EXEC PostAutomovel @IDCLIENTE = 1,
-@MODELO = 'Celta',
-@MARCA = 'Marca aleatória',
-@ANOMODELO = '2012',
-@COR = 'Preto',
-@RENAVAM = '1512351651',
-@NUMEROMOTOR = '15dw1d1e451',
-@CRLV = '1151545145';
-
-EXEC GetAllClients;
-
-EXEC PostClientPf @NOME = 'Leozin Bananeiro', @DATANASCIMENTO = '26/11/1996', @CPF = '12345678911', @CNH = '98765432100', @TELEFONE ='119823723';
-EXEC PostClientPj @RAZAOSOCIAL = 'Construtora ENG', @DATACRIACAO = '27/12/1988', @CNPJ = '98765432100', @TELEFONE ='40028922';
-
-EXEC PutLoginClientPf @EMAIL = 'mudouPF@gmail.com', @SENHA = '52485', @CPF ='12345678911' ;
-EXEC PutLoginClientPJ @EMAIL= 'mudouPJ@gmail.com', @SENHA = '55948542', @CNPJ = '98765432100';
-
-EXEC PutClient @EMAIL ='exemploCPF@gmail.com', @SENHA ='123456', @TELEFONE = '119999999', @ID = 1;
-
-EXEC ChangeStatusClientById @ID = 1, @STATUS = 'FALSE';
-
-EXEC DeleteClient @ID = 2;
