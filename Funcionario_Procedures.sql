@@ -20,9 +20,9 @@ CREATE PROCEDURE PostFuncionario
 AS
 SELECT PARSE(@DATAADMISSAO as date USING 'AR-LB')
 SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
-INSERT INTO FUNCIONARIOS(fun_nome, fun_email, fun_dataNascimento, fun_dataAdmissao, fun_cpf, fun_rg,
+INSERT INTO FUNCIONARIOS(fun_nome, fun_email,fun_senha ,fun_dataNascimento, fun_dataAdmissao, fun_cpf, fun_rg,
 fun_telefone,fun_cep, fun_logradouro, fun_cargo, fun_sexo,fun_salario, fun_estadoCivil, fun_status)
-VALUES(@NOME, @EMAIL, @DATANASCIMENTO, @DATAADMISSAO, @CPF, @RG, @TELEFONE, @CEP, @LOGRADOURO, @CARGO, @SEXO,@SALARIO, @ESTADOCIVIL,0)
+VALUES(@NOME, @EMAIL,@CPF, @DATANASCIMENTO, @DATAADMISSAO, @CPF, @RG, @TELEFONE, @CEP, @LOGRADOURO, @CARGO, @SEXO,@SALARIO, @ESTADOCIVIL,0)
 GO;
 
 CREATE PROCEDURE PutFuncionario

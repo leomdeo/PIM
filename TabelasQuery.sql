@@ -13,8 +13,8 @@ CREATE TABLE FUNCIONARIOS(
 	fun_cargo VARCHAR(50) NOT NULL,
 	fun_salario DECIMAL NOT NULL,
 	fun_sexo INT NOT NULL, CHECK (fun_sexo IN(0,1)),
-	fun_estadoCivil BIT NOT NULL, CHECK (fun_estadoCivil IN(0,1,2,3)),
-	fun_status BIT NOT NULL, CHECK (fun_status IN(0,1,2)),
+	fun_estadoCivil INT NOT NULL, CHECK (fun_estadoCivil IN(0,1,2,3)),
+	fun_status INT NOT NULL, CHECK (fun_status IN(0,1,2)),
 );
 
 CREATE TABLE CLIENTES(
@@ -29,14 +29,14 @@ CREATE TABLE CLIENTES(
 	cli_cnh VARCHAR(11),
 	cli_rg VARCHAR(11) NOT NULL,
 	cli_dataNascimento VARCHAR(10),
-	cli_estadoCivil BIT NOT NULL, CHECK (cli_estadoCivil IN(0,1,2,3)),
+	cli_estadoCivil INT NOT NULL, CHECK (cli_estadoCivil IN(0,1,2,3)),
 	cli_sexo INT NOT NULL, CHECK (cli_sexo IN(0,1)),
 	cli_razaoSocial VARCHAR(50),
 	cli_contratoSocial VARCHAR(50),
 	cli_cnpj VARCHAR(14),
 	cli_dataCriacao VARCHAR(10),
 	cli_tipoCliente INT NOT NULL, CHECK (cli_tipoCliente IN(0,1)),
-	cli_status BIT NOT NULL, CHECK (cli_status IN(0,1,2)),
+	cli_status INT NOT NULL, CHECK (cli_status IN(0,1,2)),
 );
 
 CREATE TABLE AUTOMOVEIS (
@@ -50,7 +50,7 @@ CREATE TABLE AUTOMOVEIS (
 	auto_numeroMotor VARCHAR(50)NOT NULL,
 	auto_placa VARCHAR(7) NOT NULL,
 	auto_crlv VARCHAR(50)NOT NULL,
-	auto_status BIT NOT NULL, CHECK (auto_status IN(0,1,2)),
+	auto_status INT NOT NULL, CHECK (auto_status IN(0,1,2)),
 	FOREIGN KEY (auto_cli_id) REFERENCES CLIENTES(cli_id) ON DELETE CASCADE,
 );
 
@@ -63,7 +63,7 @@ CREATE TABLE SEGURADORAS(
 	segu_telefone VARCHAR(11) NOT NULL,
 	segu_cep VARCHAR(8) NOT NULL,
 	segu_logradouro VARCHAR(50) NOT NULL,
-	segu_status BIT NOT NULL, CHECK (segu_status IN(0,1,2)),
+	segu_status INT NOT NULL, CHECK (segu_status IN(0,1,2)),
 );
 
 CREATE TABLE PLANOS(
@@ -71,7 +71,7 @@ CREATE TABLE PLANOS(
 	plan_nomePlano VARCHAR(50),
 	plan_segu_id INT NOT NULL,
 	plan_tipoPlano INT NOT NULL, CHECK (plan_tipoPlano IN(0,1,2)),
-	plan_status BIT NOT NULL, CHECK (plan_status IN(0,1,2)),
+	plan_status INT NOT NULL, CHECK (plan_status IN(0,1,2)),
 	FOREIGN KEY (plan_segu_id) REFERENCES SEGURADORAS(segu_id) ON DELETE CASCADE,
 );
 
