@@ -17,23 +17,24 @@ CREATE TABLE FUNCIONARIOS(
 	fun_status INT NOT NULL, CHECK (fun_status IN(0,1,2)),
 );
 
+
 CREATE TABLE CLIENTES(
     cli_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	cli_email VARCHAR(50),
+	cli_email VARCHAR(50) UNIQUE,
 	cli_senha VARCHAR(18),
 	cli_cep VARCHAR(8) NOT NULL,
 	cli_logradouro VARCHAR(50) NOT NULL,
 	cli_telefone VARCHAR(12),
     cli_nome VARCHAR(50),
-	cli_cpf VARCHAR(11),
-	cli_cnh VARCHAR(11),
-	cli_rg VARCHAR(11) NOT NULL,
+	cli_cpf VARCHAR(11) UNIQUE,
+	cli_cnh VARCHAR(11) UNIQUE,
+	cli_rg VARCHAR(11) NOT NULL UNIQUE,
 	cli_dataNascimento VARCHAR(10),
 	cli_estadoCivil INT NOT NULL, CHECK (cli_estadoCivil IN(0,1,2,3)),
 	cli_sexo INT NOT NULL, CHECK (cli_sexo IN(0,1)),
 	cli_razaoSocial VARCHAR(50),
 	cli_contratoSocial VARCHAR(50),
-	cli_cnpj VARCHAR(14),
+	cli_cnpj VARCHAR(14) UNIQUE,
 	cli_dataCriacao VARCHAR(10),
 	cli_tipoCliente INT NOT NULL, CHECK (cli_tipoCliente IN(0,1)),
 	cli_status INT NOT NULL, CHECK (cli_status IN(0,1,2)),
@@ -71,6 +72,7 @@ CREATE TABLE PLANOS(
 	plan_nomePlano VARCHAR(50),
 	plan_segu_id INT NOT NULL,
 	plan_tipoPlano INT NOT NULL, CHECK (plan_tipoPlano IN(0,1,2)),
+	plan_valor DECIMAL NOT NULL,
 	plan_status INT NOT NULL, CHECK (plan_status IN(0,1,2)),
 	FOREIGN KEY (plan_segu_id) REFERENCES SEGURADORAS(segu_id) ON DELETE CASCADE,
 );
@@ -94,16 +96,18 @@ CREATE TABLE COBERTURAS(
 	FOREIGN KEY (cober_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
 );
 
+
 CREATE TABLE APOLICES(
 	apol_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	apol_cli_id INT,
+	apol_auto_id INT UNIQUE,
 	apol_plan_id INT,
 	apol_fun_id INT,
 	apol_formaPagamento INT NOT NULL, CHECK (apol_formaPagamento IN(0,1,2)),
-	apol_valorSeguro DECIMAL NOT NULL,
 	apol_dataCriacaoApolice DATETIME NOT NULL,
-	apol_tempoContratacaoPorMes INT NOT NULL,
-	FOREIGN KEY (apol_cli_id) REFERENCES CLIENTES(cli_id) ON DELETE CASCADE,
-	FOREIGN KEY (apol_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
-	FOREIGN KEY (apol_fun_id) REFERENCES FUNCIONARIOS(fun_id) ON DELETE CASCADE
+	apol_tempoVigencia INT NOT NULL,
+	FOREIGN KEY (apol_cli_id) REFERENCES CLIENTES(cli_id),
+	FOREIGN KEY (apol_auto_id) REFERENCES AUTOMOVEIS(auto_id),
+	FOREIGN KEY (apol_plan_id) REFERENCES PLANOS(plan_id),
+	FOREIGN KEY (apol_fun_id) REFERENCES FUNCIONARIOS(fun_id)
 );
