@@ -76,7 +76,7 @@ CLIENTES.cli_telefone = @TELEFONE,
 CLIENTES.cli_cep  = @CEP,
 CLIENTES.cli_logradouro = @LOGRADOURO,
 CLIENTES.cli_estadoCivil = @ESTADOCIVIL
-WHERE CLIENTES.cli_id = @ID
+WHERE CLIENTES.cli_id = @ID 
 GO;
 
 CREATE PROCEDURE PutLoginClientPf
@@ -113,12 +113,13 @@ DELETE FROM CLIENTES
 WHERE CLIENTES.cli_id = @ID
 GO;
 
+USE TSBSEGUROS
 
 EXEC GetAllClients
 
 EXEC PostClientPf @NOME = 'Nicolas',
 @EMAIL = 'nic@gmail.com',
-@CPF = '12345678911',
+@CPF = '12345667911',
 @CNH = '1111111111', 
 @RG = '1111111111',
 @TELEFONE ='11999999999',
