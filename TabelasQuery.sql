@@ -41,7 +41,7 @@ CREATE TABLE CLIENTES(
 
 CREATE TABLE AUTOMOVEIS (
     auto_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	auto_cli_id INT,
+	auto_cli_id INT NOT NULL,
     auto_modelo VARCHAR(50)NOT NULL,
 	auto_marca VARCHAR(50)NOT NULL,
 	auto_anoModelo VARCHAR(4) NOT NULL,
@@ -95,3 +95,19 @@ CREATE TABLE COBERTURAS(
 	FOREIGN KEY (cober_plan_id) REFERENCES PLANOS(plan_id) ON DELETE CASCADE,
 );
 
+
+
+CREATE TABLE APOLICES(
+	apol_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	apol_cli_id INT,
+	apol_auto_id INT,
+	apol_plan_id INT,
+	apol_fun_id INT,
+	apol_formaPagamento INT NOT NULL, CHECK (apol_formaPagamento IN(0,1,2)),
+	apol_dataCriacaoApolice DATETIME NOT NULL,
+	apol_tempoVigencia INT NOT NULL,
+	FOREIGN KEY (apol_cli_id) REFERENCES CLIENTES(cli_id) ,
+	FOREIGN KEY (apol_auto_id) REFERENCES AUTOMOVEIS(auto_id) ,
+	FOREIGN KEY (apol_plan_id) REFERENCES PLANOS(plan_id) ,
+	FOREIGN KEY (apol_fun_id) REFERENCES FUNCIONARIOS(fun_id)
+);

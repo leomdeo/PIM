@@ -5,7 +5,6 @@ SELECT *
 FROM APOLICES 
 GO;
 
-
 CREATE PROCEDURE GetApolicesByCarId
 AS
 SELECT ap.apol_id, 
@@ -30,7 +29,6 @@ JOIN SEGURADORAS seg
 ON pla.plan_segu_id  = seg.segu_id
 GO;
 
-
 CREATE PROCEDURE PostApolice
 @IDCLIENTE INT,
 @IDAUTOMOVEL INT,
@@ -41,5 +39,8 @@ CREATE PROCEDURE PostApolice
 AS
 INSERT INTO APOLICES(
 apol_cli_id, apol_auto_id,apol_plan_id, apol_fun_id ,apol_formaPagamento,apol_dataCriacaoApolice,apol_tempoVigencia)
-VALUES(@IDPLANO, @IDAUTOMOVEL,@IDPLANO, @IDFUNCIONARIO, @FORMAPAGAMENTO, @DATACRIACAOAPOLICE, 12)
+VALUES(@IDCLIENTE, @IDAUTOMOVEL,@IDPLANO, @IDFUNCIONARIO, @FORMAPAGAMENTO, @DATACRIACAOAPOLICE, 12)
 GO;
+
+
+EXEC GetApolicesByCarId @ID = 2;
