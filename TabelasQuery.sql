@@ -96,11 +96,10 @@ CREATE TABLE COBERTURAS(
 );
 
 
-
 CREATE TABLE APOLICES(
 	apol_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	apol_cli_id INT,
-	apol_auto_id INT,
+	apol_auto_id INT UNIQUE,
 	apol_plan_id INT,
 	apol_fun_id INT,
 	apol_formaPagamento INT NOT NULL, CHECK (apol_formaPagamento IN(0,1,2)),

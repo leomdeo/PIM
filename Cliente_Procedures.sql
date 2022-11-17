@@ -23,6 +23,7 @@ WHERE CLIENTES.cli_tipoCliente = 1
 ;
 
 
+
 /* -- POSTS --- */
 CREATE PROCEDURE PostClientPf 
 @NOME VARCHAR(50),
@@ -37,14 +38,19 @@ CREATE PROCEDURE PostClientPf
 @ESTADOCIVIL INT,
 @SEXO INT
 AS 
-SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
-INSERT INTO CLIENTES (
-cli_nome, cli_email, cli_senha, cli_dataNascimento, 
-cli_cpf, cli_cnh, cli_telefone, cli_tipoCliente, cli_status,
-cli_cep,cli_logradouro, cli_estadoCivil, cli_sexo, cli_rg)
-VALUES(@NOME, @EMAIL, NULL, @DATANASCIMENTO, @CPF, @CNH, @TELEFONE, 0, 0, @CEP, @LOGRADOURO, @ESTADOCIVIL, @SEXO, @RG);
-
+BEGIN
+IF NOT EXISTS (SELECT * FROM CLIENTES WHERE CLIENTES.cli_cpf = @CPF)
+	BEGIN
+		SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
+		INSERT INTO CLIENTES (
+		cli_nome, cli_email, cli_senha, cli_dataNascimento, 
+		cli_cpf, cli_cnh, cli_telefone, cli_tipoCliente, cli_status,
+		cli_cep,cli_logradouro, cli_estadoCivil, cli_sexo, cli_rg)
+		VALUES(@NOME, @EMAIL, NULL, @DATANASCIMENTO, @CPF, @CNH, @TELEFONE, 0, 0, @CEP, @LOGRADOURO, @ESTADOCIVIL, @SEXO, @RG)
+	END
+END
 GO;
+
 
 CREATE PROCEDURE PostClientPj 
 @RAZAOSOCIAL VARCHAR(50),
@@ -56,10 +62,15 @@ CREATE PROCEDURE PostClientPj
 @CEP VARCHAR(8),
 @LOGRADOURO VARCHAR(50)
 AS 
-SELECT PARSE(@DATACRIACAO as date USING 'AR-LB')
-INSERT INTO CLIENTES(cli_razaoSocial, cli_contratoSocial, cli_email, cli_senha, cli_dataCriacao, cli_cnpj, cli_telefone, cli_tipoCliente, cli_status,
-cli_cep, cli_logradouro)
-VALUES(@RAZAOSOCIAL, @CONTRATOSOCIAL,@EMAIL, NULL, @DATACRIACAO, @CNPJ, @TELEFONE, 1, 0, @CEP, @LOGRADOURO) 
+BEGIN
+IF NOT EXISTS (SELECT * FROM CLIENTES WHERE CLIENTES.cli_cnpj = @CNPJ)
+	BEGIN
+		SELECT PARSE(@DATACRIACAO as date USING 'AR-LB')
+		INSERT INTO CLIENTES(cli_razaoSocial, cli_contratoSocial, cli_email, cli_senha, cli_dataCriacao, cli_cnpj, cli_telefone, cli_tipoCliente, cli_status,
+		cli_cep, cli_logradouro)
+		VALUES(@RAZAOSOCIAL, @CONTRATOSOCIAL,@EMAIL, NULL, @DATACRIACAO, @CNPJ, @TELEFONE, 1, 0, @CEP, @LOGRADOURO) 
+	END
+END
 GO;
 
 /* -- PUTS  --- */
@@ -79,13 +90,15 @@ CLIENTES.cli_estadoCivil = @ESTADOCIVIL
 WHERE CLIENTES.cli_id = @ID 
 GO;
 
+
+
 CREATE PROCEDURE PutLoginClientPf
 @SENHA VARCHAR(50),
 @CPF VARCHAR(50)
 AS
-UPDATE CLIENTES
-SET  CLIENTES.cli_senha = @SENHA
-WHERE CLIENTES.cli_cpf = @CPF
+		UPDATE CLIENTES
+		SET  CLIENTES.cli_senha = @SENHA
+		WHERE CLIENTES.cli_cpf = @CPF AND CLIENTES.cli_senha != NULL  AND CLIENTES.cli_senha != null
 GO;
 
 CREATE PROCEDURE PutLoginClientPJ
@@ -94,7 +107,7 @@ CREATE PROCEDURE PutLoginClientPJ
 AS
 UPDATE CLIENTES 
 SET CLIENTES.cli_senha = @SENHA
-WHERE CLIENTES.cli_cnpj = @CNPJ
+WHERE CLIENTES.cli_cnpj = @CNPJ AND CLIENTES.cli_senha != NULL  AND CLIENTES.cli_senha != null
 GO;
 
 CREATE PROCEDURE ChangeStatusClientById 
@@ -106,20 +119,26 @@ SET CLIENTES.cli_status = @STATUS
 WHERE CLIENTES.cli_id = @ID 
 GO;
 
+
 CREATE PROCEDURE DeleteClient 
 @ID INT
 AS
-DELETE FROM CLIENTES 
-WHERE CLIENTES.cli_id = @ID
+BEGIN
+IF NOT EXISTS (SELECT * FROM APOLICES WHERE APOLICES.apol_cli_id = @ID)
+	BEGIN
+		DELETE FROM CLIENTES 
+		WHERE CLIENTES.cli_id = @ID
+	END
+END
 GO;
 
 USE TSBSEGUROS
 
-EXEC GetAllClients
+EXEC DeleteClient @ID = 1;
 
 EXEC PostClientPf @NOME = 'Nicolas',
 @EMAIL = 'nic@gmail.com',
-@CPF = '12345667911',
+@CPF = '12345667910',
 @CNH = '1111111111', 
 @RG = '1111111111',
 @TELEFONE ='11999999999',
@@ -128,3 +147,5 @@ EXEC PostClientPf @NOME = 'Nicolas',
 @LOGRADOURO= 'aaaaaa',
 @ESTADOCIVIL = 0,
 @SEXO = 0
+
+EXEC PutLoginClientPf @CPF = '12345667911', @SENHA = 'a12';
