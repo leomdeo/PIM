@@ -12,10 +12,15 @@ CREATE PROCEDURE PostSeguradora
 @CEP VARCHAR(8),
 @LOGRADOURO VARCHAR(50)
 AS
-INSERT INTO SEGURADORAS(
-segu_razaoSocial, segu_cnpj, segu_contratoSocial, segu_email, segu_telefone,
-segu_cep, segu_logradouro, segu_status)
-VALUES(@RAZAOSOCIAL, @CNPJ, @CONTRATOSOCIAL, @EMAIL, @TELEFONE, @CEP, @LOGRADOURO, 0)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM SEGURADORAS WHERE SEGURADORAS.segu_razaoSocial = @RAZAOSOCIAL AND SEGURADORAS.segu_cnpj = @CNPJ)
+	BEGIN
+		INSERT INTO SEGURADORAS(
+		segu_razaoSocial, segu_cnpj, segu_contratoSocial, segu_email, segu_telefone,
+		segu_cep, segu_logradouro, segu_status)
+		VALUES(@RAZAOSOCIAL, @CNPJ, @CONTRATOSOCIAL, @EMAIL, @TELEFONE, @CEP, @LOGRADOURO, 0)
+	END 
+END
 GO;
 
 CREATE PROCEDURE PutSeguradora

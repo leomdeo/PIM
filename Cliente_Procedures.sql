@@ -90,15 +90,13 @@ CLIENTES.cli_estadoCivil = @ESTADOCIVIL
 WHERE CLIENTES.cli_id = @ID 
 GO;
 
-
-
 CREATE PROCEDURE PutLoginClientPf
 @SENHA VARCHAR(50),
 @CPF VARCHAR(50)
 AS
-		UPDATE CLIENTES
-		SET  CLIENTES.cli_senha = @SENHA
-		WHERE CLIENTES.cli_cpf = @CPF AND CLIENTES.cli_senha != NULL  AND CLIENTES.cli_senha != null
+UPDATE CLIENTES
+SET  CLIENTES.cli_senha = @SENHA
+WHERE CLIENTES.cli_cpf = @CPF
 GO;
 
 CREATE PROCEDURE PutLoginClientPJ
@@ -107,7 +105,7 @@ CREATE PROCEDURE PutLoginClientPJ
 AS
 UPDATE CLIENTES 
 SET CLIENTES.cli_senha = @SENHA
-WHERE CLIENTES.cli_cnpj = @CNPJ AND CLIENTES.cli_senha != NULL  AND CLIENTES.cli_senha != null
+WHERE CLIENTES.cli_cnpj = @CNPJ 
 GO;
 
 CREATE PROCEDURE ChangeStatusClientById 
@@ -134,11 +132,13 @@ GO;
 
 USE TSBSEGUROS
 
-EXEC DeleteClient @ID = 1;
+EXEC DeleteClient @ID = 2;
 
-EXEC PostClientPf @NOME = 'Nicolas',
-@EMAIL = 'nic@gmail.com',
-@CPF = '12345667910',
+EXEC GetAllClients
+
+EXEC PostClientPf @NOME = 'Nicolas Paxao',
+@EMAIL = 'nic@gmail.co',
+@CPF = '12345667911',
 @CNH = '1111111111', 
 @RG = '1111111111',
 @TELEFONE ='11999999999',
@@ -148,4 +148,4 @@ EXEC PostClientPf @NOME = 'Nicolas',
 @ESTADOCIVIL = 0,
 @SEXO = 0
 
-EXEC PutLoginClientPf @CPF = '12345667911', @SENHA = 'a12';
+EXEC PutLoginClientPf @CPF = '12345667910', @SENHA = 'a12';

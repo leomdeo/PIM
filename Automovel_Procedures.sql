@@ -14,10 +14,15 @@ CREATE PROCEDURE PostAutomovel
 @NUMEROMOTOR VARCHAR(50),
 @CRLV VARCHAR(50)
 AS
-INSERT INTO AUTOMOVEIS(
-auto_cli_id, auto_placa, auto_modelo, auto_marca, auto_anoModelo, 
-auto_cor, auto_renavam, auto_numeroMotor, auto_crlv, auto_status)
-VALUES(@IDCLIENTE, @PLACA ,@MODELO, @MARCA, @ANOMODELO, @COR, @RENAVAM, @NUMEROMOTOR, @CRLV, 2)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM  AUTOMOVEIS WHERE AUTOMOVEIS.auto_placa = @PLACA OR AUTOMOVEIS.auto_renavam = @RENAVAM OR AUTOMOVEIS.auto_numeroMotor = @NUMEROMOTOR)
+	BEGIN
+		INSERT INTO AUTOMOVEIS(
+		auto_cli_id, auto_placa, auto_modelo, auto_marca, auto_anoModelo, 
+		auto_cor, auto_renavam, auto_numeroMotor, auto_crlv, auto_status)
+		VALUES(@IDCLIENTE, @PLACA ,@MODELO, @MARCA, @ANOMODELO, @COR, @RENAVAM, @NUMEROMOTOR, @CRLV, 2)
+	END
+END
 GO;
 
 CREATE PROCEDURE PutAutomovel

@@ -9,8 +9,13 @@ CREATE PROCEDURE PostCobertura
 @DESCRICAO VARCHAR(200),
 @INDENIZACAO DECIMAL 
 AS
-INSERT INTO COBERTURAS(cober_plan_id , cober_descricao, cober_indenizacao, cober_nome)
-VALUES(@IDPLANO, @DESCRICAO, @INDENIZACAO, @NOME)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM COBERTURAS WHERE COBERTURAS.cober_nome = @NOME)
+	BEGIN
+		INSERT INTO COBERTURAS(cober_plan_id , cober_descricao, cober_indenizacao, cober_nome)
+		VALUES(@IDPLANO, @DESCRICAO, @INDENIZACAO, @NOME)
+	END
+END
 GO;
 
 CREATE PROCEDURE PutCobertura

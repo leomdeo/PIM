@@ -10,8 +10,13 @@ CREATE PROCEDURE PostAssistencia
 @EMPRESASUPORTE VARCHAR(50),
 @NOME VARCHAR(50)
 AS
-INSERT INTO ASSISTENCIAS(assist_plan_id, assist_descricao, assist_contato,assist_empresaSuporte ,assist_nome)
-VALUES(@IDPLANO, @DESCRICAO, @CONTATO, @EMPRESASUPORTE, @NOME)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM ASSISTENCIAS WHERE ASSISTENCIAS.assist_nome = @NOME)
+	BEGIN
+		INSERT INTO ASSISTENCIAS(assist_plan_id, assist_descricao, assist_contato,assist_empresaSuporte ,assist_nome)
+		VALUES(@IDPLANO, @DESCRICAO, @CONTATO, @EMPRESASUPORTE, @NOME)
+	END
+END
 GO;
 
 CREATE PROCEDURE PutAssistencia

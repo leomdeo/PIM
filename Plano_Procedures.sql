@@ -9,8 +9,13 @@ CREATE PROCEDURE PostPlano
 @VALOR DECIMAL,
 @TIPOPLANO INT
 AS
-INSERT INTO PLANOS(plan_nomePlano, plan_valor,plan_segu_id, plan_tipoPlano, plan_status)
-VALUES(@NOMEPLANO, @VALOR,@IDSEGURADORA, @TIPOPLANO, 0)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM PLANOS WHERE PLANOS.plan_nomePlano = @NOMEPLANO)
+	BEGIN
+		INSERT INTO PLANOS(plan_nomePlano, plan_valor,plan_segu_id, plan_tipoPlano, plan_status)
+		VALUES(@NOMEPLANO, @VALOR,@IDSEGURADORA, @TIPOPLANO, 0)
+	END
+END
 GO;
 
 CREATE PROCEDURE PutPlano
@@ -30,3 +35,11 @@ AS
 DELETE FROM PLANOS
 WHERE PLANOS.plan_id = @ID;
 GO;
+
+
+exec GetAllPlanos
+EXEC PostPlano
+@NOMEPLANO = 'tESTE',
+@IDSEGURADORA ='1',
+@VALOR= 1200,
+@TIPOPLANO =1

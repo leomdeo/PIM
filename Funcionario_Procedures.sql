@@ -3,6 +3,7 @@ AS
 SELECT * FROM FUNCIONARIOS
 GO;
 
+
 CREATE PROCEDURE PostFuncionario
 @NOME VARCHAR(50),
 @EMAIL VARCHAR(50),
@@ -18,11 +19,16 @@ CREATE PROCEDURE PostFuncionario
 @SALARIO DECIMAL,
 @ESTADOCIVIL INT
 AS
-SELECT PARSE(@DATAADMISSAO as date USING 'AR-LB')
-SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
-INSERT INTO FUNCIONARIOS(fun_nome, fun_email,fun_senha ,fun_dataNascimento, fun_dataAdmissao, fun_cpf, fun_rg,
-fun_telefone,fun_cep, fun_logradouro, fun_cargo, fun_sexo,fun_salario, fun_estadoCivil, fun_status)
-VALUES(@NOME, @EMAIL,@CPF, @DATANASCIMENTO, @DATAADMISSAO, @CPF, @RG, @TELEFONE, @CEP, @LOGRADOURO, @CARGO, @SEXO,@SALARIO, @ESTADOCIVIL,0)
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM FUNCIONARIOS WHERE FUNCIONARIOS.fun_cpf = @CPF AND FUNCIONARIOS.fun_rg = @RG)
+	BEGIN
+		SELECT PARSE(@DATAADMISSAO as date USING 'AR-LB')
+		SELECT PARSE(@DATANASCIMENTO as date USING 'AR-LB')
+		INSERT INTO FUNCIONARIOS(fun_nome, fun_email,fun_senha ,fun_dataNascimento, fun_dataAdmissao, fun_cpf, fun_rg,
+		fun_telefone,fun_cep, fun_logradouro, fun_cargo, fun_sexo,fun_salario, fun_estadoCivil, fun_status)
+		VALUES(@NOME, @EMAIL,@CPF, @DATANASCIMENTO, @DATAADMISSAO, @CPF, @RG, @TELEFONE, @CEP, @LOGRADOURO, @CARGO, @SEXO,@SALARIO, @ESTADOCIVIL,0)
+	END
+END
 GO;
 
 CREATE PROCEDURE PutFuncionario
@@ -60,6 +66,11 @@ GO;
 CREATE PROCEDURE DeleteFuncionario
 @ID INT
 AS
-DELETE FROM FUNCIONARIOS 
-WHERE FUNCIONARIOS.fun_id = @ID
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM APOLICES WHERE APOLICES.apol_fun_id = @ID)
+	BEGIN
+		DELETE FROM FUNCIONARIOS 
+		WHERE FUNCIONARIOS.fun_id = @ID
+	END
+END
 GO;
