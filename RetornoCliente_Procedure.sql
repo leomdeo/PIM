@@ -31,6 +31,3 @@ ON pla.plan_id  = cobert.cober_plan_id
 
 WHERE cli.cli_email = @EMAIL AND cli.cli_senha = @SENHA
 ;
-
-
-EXEC ReturnClient @EMAIL = 'nic@gmail.com', @SENHA = '123456'

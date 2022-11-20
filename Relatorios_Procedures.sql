@@ -18,8 +18,3 @@ SELECT plan_valor, apol_dataCriacaoApolice, apol_id FROM APOLICES apol
 JOIN PLANOS pla
 ON apol.apol_plan_id  = pla.plan_id
 WHERE SUBSTRING(CONVERT(CHAR(8),@DATA,112),1,6) = SUBSTRING(CONVERT(CHAR(8),apol.apol_dataCriacaoApolice,112),1,6);
-
-
-
-EXEC DesempenhoFuncionario @DATA = '202211', @FUNCID = 1002;
-EXEC DesempenhoEmpresa @DATA = '202211';

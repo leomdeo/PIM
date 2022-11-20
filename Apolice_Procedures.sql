@@ -41,6 +41,3 @@ INSERT INTO APOLICES(
 apol_cli_id, apol_auto_id,apol_plan_id, apol_fun_id ,apol_formaPagamento,apol_dataCriacaoApolice,apol_tempoVigencia)
 VALUES(@IDCLIENTE, @IDAUTOMOVEL,@IDPLANO, @IDFUNCIONARIO, @FORMAPAGAMENTO, @DATACRIACAOAPOLICE, 12)
 GO;
-
-
-EXEC GetApolicesByCarId @ID = 2;

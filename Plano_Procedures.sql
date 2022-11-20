@@ -35,11 +35,3 @@ AS
 DELETE FROM PLANOS
 WHERE PLANOS.plan_id = @ID;
 GO;
-
-
-exec GetAllPlanos
-EXEC PostPlano
-@NOMEPLANO = 'tESTE',
-@IDSEGURADORA ='1',
-@VALOR= 1200,
-@TIPOPLANO =1
